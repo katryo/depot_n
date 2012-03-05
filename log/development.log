@@ -1,0 +1,189 @@
+  [1m[36m (0.0ms)[0m  [1mselect sqlite_version(*)[0m
+  [1m[35m (118.0ms)[0m  CREATE TABLE "schema_migrations" ("version" varchar(255) NOT NULL) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("schema_migrations")[0m
+  [1m[35m (100.0ms)[0m  CREATE UNIQUE INDEX "unique_schema_migrations" ON "schema_migrations" ("version")
+  [1m[36m (1.0ms)[0m  [1mSELECT "schema_migrations"."version" FROM "schema_migrations" [0m
+Migrating to CreateProducts (20110711000001)
+  [1m[35m (0.0ms)[0m  begin transaction
+  [1m[36m (1.0ms)[0m  [1mCREATE TABLE "products" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar(255), "description" text, "image_url" varchar(255), "price" decimal(8,2), "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL) [0m
+  [1m[35m (0.0ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20110711000001')
+  [1m[36m (104.0ms)[0m  [1mcommit transaction[0m
+Migrating to CreateCarts (20110711000002)
+  [1m[35m (0.0ms)[0m  begin transaction
+  [1m[36m (0.0ms)[0m  [1mCREATE TABLE "carts" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL) [0m
+  [1m[35m (0.0ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20110711000002')
+  [1m[36m (116.0ms)[0m  [1mcommit transaction[0m
+Migrating to CreateLineItems (20110711000003)
+  [1m[35m (0.0ms)[0m  begin transaction
+  [1m[36m (1.0ms)[0m  [1mCREATE TABLE "line_items" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "product_id" integer, "cart_id" integer, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL) [0m
+  [1m[35m (0.0ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20110711000003')
+  [1m[36m (124.0ms)[0m  [1mcommit transaction[0m
+Migrating to AddQuantityToLineItems (20110711000004)
+  [1m[35m (0.0ms)[0m  begin transaction
+  [1m[36m (0.0ms)[0m  [1mALTER TABLE "line_items" ADD "quantity" integer DEFAULT 1[0m
+  [1m[35m (0.0ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20110711000004')
+  [1m[36m (211.0ms)[0m  [1mcommit transaction[0m
+Migrating to CombineItemsInCart (20110711000005)
+  [1m[35m (0.0ms)[0m  begin transaction
+  [1m[36mCart Load (1.0ms)[0m  [1mSELECT "carts".* FROM "carts" [0m
+  [1m[35m (0.0ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20110711000005')
+  [1m[36m (82.0ms)[0m  [1mcommit transaction[0m
+Migrating to AddPriceToLineItem (20110711000006)
+  [1m[35m (0.0ms)[0m  begin transaction
+  [1m[36m (1.0ms)[0m  [1mALTER TABLE "line_items" ADD "price" decimal[0m
+  [1m[35mLineItem Load (0.0ms)[0m  SELECT "line_items".* FROM "line_items" 
+  [1m[36m (0.0ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20110711000006')[0m
+  [1m[35m (114.0ms)[0m  commit transaction
+  [1m[36m (0.0ms)[0m  [1mselect sqlite_version(*)[0m
+  [1m[35m (0.0ms)[0m  SELECT "schema_migrations"."version" FROM "schema_migrations" 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("carts")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("line_items")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("products")[0m
+
+
+Started GET "/" for 127.0.0.1 at 2012-03-03 14:02:30 +0900
+Processing by StoreController#index as HTML
+  [1m[36m (0.0ms)[0m  [1mbegin transaction[0m
+  [1m[35mSQL (80.0ms)[0m  INSERT INTO "carts" ("created_at", "updated_at") VALUES (?, ?)  [["created_at", Sat, 03 Mar 2012 05:02:34 UTC +00:00], ["updated_at", Sat, 03 Mar 2012 05:02:34 UTC +00:00]]
+  [1m[36m (77.0ms)[0m  [1mcommit transaction[0m
+  [1m[35mProduct Load (0.0ms)[0m  SELECT "products".* FROM "products" ORDER BY title
+  Rendered store/index.html.erb within layouts/application (59.0ms)
+Compiled carts.css  (4ms)  (pid 2860)
+Compiled line_items.css  (34ms)  (pid 2860)
+Compiled products.css  (7ms)  (pid 2860)
+Compiled scaffolds.css  (10ms)  (pid 2860)
+Compiled store.css  (7ms)  (pid 2860)
+Compiled application.css  (255ms)  (pid 2860)
+Compiled jquery.js  (1ms)  (pid 2860)
+Compiled jquery-ui.js  (3ms)  (pid 2860)
+Compiled jquery_ujs.js  (0ms)  (pid 2860)
+Completed 500 Internal Server Error in 1531ms
+
+ActionView::Template::Error (incomplete "\n" on UTF-16LE
+  (in /cygdrive/c/work/depot_n/app/assets/javascripts/carts.js.coffee)):
+    4: <head>
+    5:   <title>Pragprog Books Online Store</title>
+    6:   <%= stylesheet_link_tag "application" %>
+    7:   <%= javascript_include_tag "application" %>
+    8:   <%= csrf_meta_tag %>
+    9: </head>
+    10: <!-- END:head -->
+  app/views/layouts/application.html.erb:7:in `_app_views_layouts_application_html_erb___322823050__1062835058'
+
+
+  Rendered /usr/local/lib/ruby/gems/1.9.1/gems/actionpack-3.2.0/lib/action_dispatch/middleware/templates/rescues/_trace.erb (3.0ms)
+  Rendered /usr/local/lib/ruby/gems/1.9.1/gems/actionpack-3.2.0/lib/action_dispatch/middleware/templates/rescues/_request_and_response.erb (0.0ms)
+  Rendered /usr/local/lib/ruby/gems/1.9.1/gems/actionpack-3.2.0/lib/action_dispatch/middleware/templates/rescues/template_error.erb within rescues/layout (9.0ms)
+
+
+Started GET "/" for 127.0.0.1 at 2012-03-03 14:08:41 +0900
+Processing by StoreController#index as HTML
+  [1m[36m (0.0ms)[0m  [1mbegin transaction[0m
+  [1m[35mSQL (80.0ms)[0m  INSERT INTO "carts" ("created_at", "updated_at") VALUES (?, ?)  [["created_at", Sat, 03 Mar 2012 05:08:45 UTC +00:00], ["updated_at", Sat, 03 Mar 2012 05:08:45 UTC +00:00]]
+  [1m[36m (83.0ms)[0m  [1mcommit transaction[0m
+  [1m[35mProduct Load (0.0ms)[0m  SELECT "products".* FROM "products" ORDER BY title
+  Rendered store/index.html.erb within layouts/application (73.0ms)
+Completed 500 Internal Server Error in 1239ms
+
+ActionView::Template::Error (incomplete "\n" on UTF-16LE
+  (in /cygdrive/c/work/depot_n/app/assets/javascripts/carts.js.coffee)):
+    4: <head>
+    5:   <title>Pragprog Books Online Store</title>
+    6:   <%= stylesheet_link_tag "application" %>
+    7:   <%= javascript_include_tag "application" %>
+    8:   <%= csrf_meta_tag %>
+    9: </head>
+    10: <!-- END:head -->
+  app/views/layouts/application.html.erb:7:in `_app_views_layouts_application_html_erb__397018712__1068946598'
+
+
+  Rendered /usr/local/lib/ruby/gems/1.9.1/gems/actionpack-3.2.0/lib/action_dispatch/middleware/templates/rescues/_trace.erb (3.0ms)
+  Rendered /usr/local/lib/ruby/gems/1.9.1/gems/actionpack-3.2.0/lib/action_dispatch/middleware/templates/rescues/_request_and_response.erb (1.0ms)
+  Rendered /usr/local/lib/ruby/gems/1.9.1/gems/actionpack-3.2.0/lib/action_dispatch/middleware/templates/rescues/template_error.erb within rescues/layout (9.0ms)
+
+
+Started GET "/" for 127.0.0.1 at 2012-03-05 13:41:00 +0900
+Processing by StoreController#index as HTML
+  [1m[36m (0.0ms)[0m  [1mbegin transaction[0m
+  [1m[35mSQL (39.0ms)[0m  INSERT INTO "carts" ("created_at", "updated_at") VALUES (?, ?)  [["created_at", Mon, 05 Mar 2012 04:41:00 UTC +00:00], ["updated_at", Mon, 05 Mar 2012 04:41:00 UTC +00:00]]
+  [1m[36m (39.0ms)[0m  [1mcommit transaction[0m
+  [1m[35mProduct Load (0.2ms)[0m  SELECT "products".* FROM "products" ORDER BY title
+  Rendered store/index.html.erb within layouts/application (3.6ms)
+Compiled carts.css  (3ms)  (pid 3758)
+Compiled line_items.css  (1ms)  (pid 3758)
+Compiled products.css  (9ms)  (pid 3758)
+Compiled scaffolds.css  (9ms)  (pid 3758)
+Compiled store.css  (7ms)  (pid 3758)
+Compiled application.css  (114ms)  (pid 3758)
+Compiled jquery.js  (1ms)  (pid 3758)
+Compiled jquery-ui.js  (24ms)  (pid 3758)
+Compiled jquery_ujs.js  (0ms)  (pid 3758)
+Compiled carts.js  (525ms)  (pid 3758)
+Compiled line_items.js  (222ms)  (pid 3758)
+Compiled products.js  (217ms)  (pid 3758)
+Compiled store.js  (220ms)  (pid 3758)
+Compiled application.js  (1435ms)  (pid 3758)
+  [1m[36m (0.1ms)[0m  [1mSELECT COUNT(*) FROM "line_items" WHERE "line_items"."cart_id" = 3[0m
+  Rendered collection (0.0ms)
+  Rendered carts/_cart.html.erb (9.9ms)
+Completed 200 OK in 1890ms (Views: 1740.9ms | ActiveRecord: 104.4ms)
+
+
+Started GET "/assets/application.css?body=1" for 127.0.0.1 at 2012-03-05 13:41:02 +0900
+Served asset /application.css - 200 OK (76ms)
+
+
+Started GET "/assets/carts.css?body=1" for 127.0.0.1 at 2012-03-05 13:41:02 +0900
+Served asset /carts.css - 200 OK (1ms)
+
+
+Started GET "/assets/products.css?body=1" for 127.0.0.1 at 2012-03-05 13:41:02 +0900
+Served asset /products.css - 200 OK (1ms)
+
+
+Started GET "/assets/scaffolds.css?body=1" for 127.0.0.1 at 2012-03-05 13:41:02 +0900
+Served asset /scaffolds.css - 200 OK (5ms)
+
+
+Started GET "/assets/line_items.css?body=1" for 127.0.0.1 at 2012-03-05 13:41:02 +0900
+Served asset /line_items.css - 200 OK (4ms)
+
+
+Started GET "/assets/store.css?body=1" for 127.0.0.1 at 2012-03-05 13:41:02 +0900
+Served asset /store.css - 200 OK (1ms)
+
+
+Started GET "/assets/jquery.js?body=1" for 127.0.0.1 at 2012-03-05 13:41:02 +0900
+Served asset /jquery.js - 200 OK (15ms)
+
+
+Started GET "/assets/jquery-ui.js?body=1" for 127.0.0.1 at 2012-03-05 13:41:02 +0900
+Served asset /jquery-ui.js - 200 OK (28ms)
+
+
+Started GET "/assets/jquery_ujs.js?body=1" for 127.0.0.1 at 2012-03-05 13:41:03 +0900
+Served asset /jquery_ujs.js - 200 OK (12ms)
+
+
+Started GET "/assets/carts.js?body=1" for 127.0.0.1 at 2012-03-05 13:41:03 +0900
+Served asset /carts.js - 200 OK (18ms)
+
+
+Started GET "/assets/line_items.js?body=1" for 127.0.0.1 at 2012-03-05 13:41:03 +0900
+Served asset /line_items.js - 200 OK (1ms)
+
+
+Started GET "/assets/products.js?body=1" for 127.0.0.1 at 2012-03-05 13:41:03 +0900
+Served asset /products.js - 200 OK (4ms)
+
+
+Started GET "/assets/store.js?body=1" for 127.0.0.1 at 2012-03-05 13:41:03 +0900
+Served asset /store.js - 200 OK (5ms)
+
+
+Started GET "/assets/application.js?body=1" for 127.0.0.1 at 2012-03-05 13:41:03 +0900
+Served asset /application.js - 200 OK (37ms)
+
+
+Started GET "/assets/logo.png" for 127.0.0.1 at 2012-03-05 13:41:03 +0900
+Served asset /logo.png - 200 OK (16ms)
